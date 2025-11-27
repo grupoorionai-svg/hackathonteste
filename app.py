@@ -16,7 +16,22 @@ from services.pagamentos import pagar_boleto
 from services.recargas import fazer_recarga
 from services.emprestimos import contratar_emprestimo
 
+# debug + fallback para garantir que o diretório do projeto está no path
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))    # garante que o root do projeto seja buscado
 
+# opcional: ajuda a detectar erros na import
+try:
+    from services.pix import enviar_pix
+except Exception as e:
+    import traceback, os
+    print("Erro ao importar services.pix", file=sys.stderr)
+    print("cwd:", os.getcwd(), file=sys.stderr)
+    print("sys.path:", sys.path, file=sys.stderr)
+    traceback.print_exc()
+    raise
 # -----------------------------------------------------
 # Inicializar banco ao iniciar o app
 # -----------------------------------------------------
